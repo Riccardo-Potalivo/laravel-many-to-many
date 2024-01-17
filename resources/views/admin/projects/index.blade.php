@@ -20,6 +20,7 @@
                     <th scope="col">Title</th>
                     <th scope="col">Repository Name</th>
                     <th scope="col">Repository Link</th>
+                    <th scope="col">Type</th>
                     <th scope="col">Edit</th>
                     <th scope="col">Delete</th>
                 </tr>
@@ -32,6 +33,10 @@
                                 href="{{ route('admin.projects.show', $project->slug) }}">{{ $project->title }}</a></th>
                         <td scope="row">{{ $project->name }}</td>
                         <td scope="row"><a href="{{ $project->repository }}">{{ $project->repository }}</a></td>
+                        <td scope="row">
+                            <a class="badge rounded-pill text-bg-primary text-decoration-none "
+                                href="{{ route('admin.types.show', $project->type->slug) }}">{{ $project->type->name }}</a>
+                        </td>
                         <td scope="row">
                             <a class="btn btn-primary" href="{{ route('admin.projects.edit', $project->slug) }}">
                                 <i class="fa-solid fa-pen"></i>
