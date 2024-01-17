@@ -42,11 +42,10 @@
             <div class="mb-3">
                 <label for="description">Description</label>
                 <textarea class="form-control @error('description') is-invalid @enderror" name="description" id="description"
-                    cols="30" rows="10">{{ old('description') }}
-                @error('description')
+                    cols="30" rows="10">{{ old('description') }}@error('description')
 <div class="invalid-feedback">{{ $message }}</div>
 @enderror
-                </textarea>
+</textarea>
             </div>
 
             <div class="mb-3">
@@ -66,6 +65,27 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
+
+            <div class="mb-3">
+                <div class="form-group">
+                    <h6>Select Technologies</h6>
+                    @foreach ($technologies as $technology)
+                        <div class="form-check @error('technologies') is-invalid @enderror">
+                            <input type="checkbox" class="form-check-input" name="technologies[]"
+                                value="{{ $technology->id }}"
+                                {{ in_array($technology->id, old('technologies', [])) ? 'checked' : '' }}>
+                            <label class="form-check-label">
+                                {{ $technology->name }}
+                            </label>
+                        </div>
+                    @endforeach
+                    @error('technologies')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+
+
 
             <button type="submit" class="btn btn-primary">Submit</button>
 

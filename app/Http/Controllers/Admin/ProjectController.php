@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\Type;
+use App\Models\Technology;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use Illuminate\Support\Str;
@@ -28,8 +29,9 @@ class ProjectController extends Controller
     public function create()
     {
         $types = Type::all();
+        $technologies = Technology::all();
 
-        return view('admin.projects.create', compact('types'));
+        return view('admin.projects.create', compact('types', 'technologies'));
 
     }
 
@@ -51,6 +53,12 @@ class ProjectController extends Controller
         }
 
         $project = Project::create($formData);
+
+        if ($request->has('technologies')) {
+            $project->technologies()->attach($request->technologies);
+            // dd($project->technologies());
+        }
+
         return redirect()->route('admin.projects.show', $project->slug);
     }
 
@@ -68,7 +76,9 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
         $types = Type::all();
-        return view('admin.projects.edit', compact('project', 'types'));
+        $technologies = Technology::all();
+
+        return view('admin.projects.edit', compact('project', 'types', 'technologies'));
     }
 
     /**
@@ -93,6 +103,13 @@ class ProjectController extends Controller
         // dd($formData);
 
         $project->update($formData);
+
+        if ($request->has('technologies')) {
+            $project->technologies()->sync($request->technologies);
+        } else {
+            $project->technologies()->detach();
+        }
+
         return redirect()->route('admin.projects.show', $project->slug);
     }
 
@@ -101,7 +118,10 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        $project->technologies()->detach();
+
         $project->delete();
+
         return to_route('admin.projects.index')->with('message', "$project->title eliminato con successo");
 
     }
