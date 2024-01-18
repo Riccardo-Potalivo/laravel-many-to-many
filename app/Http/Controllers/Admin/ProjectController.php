@@ -10,6 +10,7 @@ use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 
 class ProjectController extends Controller
@@ -46,6 +47,11 @@ class ProjectController extends Controller
         $slug = Str::slug($formData['title'] . '-');
         $formData['slug'] = $slug;
         // dd($request);
+
+        // associamo all'elemento l'utente che l'ha creato
+        $userId = Auth::id();
+        $formData['user_id'] = $userId;
+
         if ($request->hasFile('image')) {
 
             $img_path = Storage::put('img', $formData['image']);
@@ -90,6 +96,9 @@ class ProjectController extends Controller
 
         $slug = Str::slug($formData['title'] . '-');
         $formData['slug'] = $slug;
+
+        //aggiungiamo l'id dell'utente proprietario del post
+        $formData['user_id'] = $project->user_id;
 
         if ($request->hasFile('image')) {
 
